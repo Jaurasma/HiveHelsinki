@@ -1,0 +1,1314 @@
+void draw_rect(t_data *img, t_map_data map)
+{
+	int i;
+	int j;
+	int og_y;
+	int og_x;
+	
+	i = 0;
+	og_x = map.x;
+	og_y = map.y;
+	while(i <= map.height)
+	{
+		j = 0;
+		if (map.y == og_y || map.y == og_y + map.height)
+		{
+			while(j <= map.width)
+			{
+				my_mlx_pixel_put(img, map.x, map.y, 0x00FFFF00);
+				map.x++;
+				j++;
+			}
+		map.x = og_x;
+		map.y++;
+		}
+		else if (map.y > og_y && map.y < og_y + map.height)
+		{
+			my_mlx_pixel_put(img, og_x, map.y, 0x00FFFF00);
+			my_mlx_pixel_put(img, og_x + map.width, map.y, 0x00FFFF00);
+			map.y++;
+		}
+		i++;
+	}
+}
+void draw_triangle(t_data *img, t_map_data map)
+{
+	int i;
+	int j;
+	int k;
+	int og_y;
+	int og_x;
+	
+	i = 0;
+	j = 0;
+	k = 0;
+	og_x = map.x;
+	og_y = map.y;
+	while (i <= map.height)
+	{
+		if (map.y == og_y)
+		{
+			my_mlx_pixel_put(img, map.x, map.y, 0x00FFFF00);
+			map.y++;
+		}
+		else if (map.y != og_y + map.height)
+		{
+			my_mlx_pixel_put(img, map.x + j, map.y, 0x00FFFF00);
+			my_mlx_pixel_put(img, map.x + k, map.y, 0x00FFFF00);
+			j++;
+			k--;
+			map.y++;
+		}
+		if (map.y == og_y + map.height)
+		{
+			while(k < 0)
+			{
+				my_mlx_pixel_put(img, map.x + k, map.y, 0x00FFFF00);
+				k++;
+			}
+			while(j > 0)
+			{
+				my_mlx_pixel_put(img, map.x + j, map.y, 0x00FFFF00);
+				j--;
+			}
+			my_mlx_pixel_put(img, map.x, map.y, 0x00FFFF00);
+		}
+		i++;
+	}
+}
+
+void	draw_ang_rect(t_data *img, t_map_data map)
+{
+	int i;
+	int j;
+	int k;
+	int og_y;
+	int og_x;
+	
+	i = 0;
+	j = 0;
+	k = 0;
+	og_x = map.x;
+	og_y = map.y;
+	while (i <= map.height)
+	{
+		ft_printf("map y is %d and og_y / 2 is %d\n\n", map.y, og_y + (map.height / 2));
+		if (map.y == og_y || map.y == og_y + map.height)
+		{
+			my_mlx_pixel_put(img, map.x, map.y, 0x00FFFF00);
+			map.y++;
+		}
+		else if (map.y < og_y + (map.height / 2))
+		{
+			my_mlx_pixel_put(img, map.x + j, map.y, 0x00FFFF00);
+			my_mlx_pixel_put(img, map.x + k, map.y, 0x00FFFF00);
+			j++;
+			k--;
+			map.y++;
+		}
+		else if (map.y >= og_y + (map.height / 2))
+		{
+			my_mlx_pixel_put(img, map.x + j, map.y, 0x00FFFF00);
+			my_mlx_pixel_put(img, map.x + k, map.y, 0x00FFFF00);
+			j--;
+			k++;
+			map.y++;
+		}
+		i++;
+	}
+}
+void draw_isometric_rect(t_data *img, t_map_data map)
+{
+    int i;
+    int j;
+    int og_y;
+    int og_x;
+    int x_isom;
+    int y_isom;
+    double theta;
+    //30 degrees to radians
+    theta = -30 * M_PI / 180;
+    i = 0;
+    og_x = map.x;
+    og_y = map.y;
+    while(i <= map.height)
+    {
+        j = 0;
+        if (map.y == og_y || map.y == og_y + map.height)
+        {
+            while(j <= map.width)
+            {
+				ft_printf("so we get here twice eh? %d\n", i);
+                x_isom = (map.x + map.y) * cos(theta);
+                y_isom = ((map.y - map.x) * sin(theta)) * -1;
+				ft_printf("isom x = %d, isom y = %d\n", x_isom, y_isom);
+                my_mlx_pixel_put(img, x_isom, y_isom, 0x00FFFF00);
+                map.x++;
+                j++;
+            }
+            map.x = og_x;
+            map.y++;
+        }
+        else if (map.y > og_y && map.y < og_y + map.height)
+        {
+            x_isom = (og_x + map.y) * cos(theta);
+            y_isom = (map.y - og_x) * sin(theta);
+            my_mlx_pixel_put(img, x_isom, y_isom, 0x00FFFF00);
+            x_isom = (og_x + map.width + map.y) * cos(theta);
+            y_isom = ((map.y - og_x - map.width) * sin(theta)) * -1;
+            my_mlx_pixel_put(img, x_isom, y_isom, 0x00FFFF00);
+            map.y++;
+        }
+        i++;
+    }
+}
+// void my_mlx_line(t_data *img, int x0, int y0, int x1, int y1, int color)
+// {
+//     int dx = abs(x1 - x0);
+//     int dy = abs(y1 - y0);
+//     int sx = x0 < x1 ? 1 : -1;
+//     int sy = y0 < y1 ? 1 : -1;
+//     int err = dx - dy;
+
+// 	//y1 = y1 * 1;
+    
+//     while (1)
+//     {
+// 		//ft_printf("values here are %d and %d\n",x0, y0);
+//         my_mlx_pixel_put(img, x0, y0, color);
+//         if (x0 == x1 && y0 == y1)
+//             break;
+//         int e2 = 2 * err;
+//         if (e2 > -dy)
+//         {
+//             err -= dy;
+//             x0 += sx;
+//         }
+//         if (e2 < dx)
+//         {
+//             err += dx;
+//             y0 += sy;
+//         }
+//     }
+// }
+// int my_abs(int x)
+// {
+//     if (x < 0)
+//         return -x;
+//     else
+//         return x;
+// }
+
+// double my_fmin(double x, double y)
+// {
+//     if (x < y)
+//     {
+//         return x;
+//     }
+//     else
+//     {
+//         return y;
+//     }
+// }
+
+// double my_fmax(double x, double y)
+// {
+//     if (x > y)
+//     {
+//         return x;
+//     }
+//     else
+//     {
+//         return y;
+//     }
+// }
+// void my_mlx_line(t_data *img, int x0, int y0, int x1, int y1, int color, t_map_data *map)
+// {
+//     // Calculate the scaling factor
+//     //double max_grid_dimension = my_fmax(map->width, map->height);
+// 	map ->height = map ->height;
+//     float scaling_factor = 1.2;//my_fmin(WINDOW_WIDTH * 0.75 / max_grid_dimension, WINDOW_HEIGHT * 0.75 / max_grid_dimension);
+//     ft_printf("scaling factor %d\n", scaling_factor);
+//     // Scale the x and y values
+//     x0 = x0 * scaling_factor;
+//     y0 = y0 * scaling_factor;
+//     x1 = x1 * scaling_factor;
+//     y1 = y1 * scaling_factor;
+    
+//     // Ensure that the minimum scaling factor is 0.5
+//     scaling_factor = my_fmax(scaling_factor, 0.5);
+    
+//     int dx = my_abs(x1 - x0);
+//     int dy = my_abs(y1 - y0);
+//     int sx = x0 < x1 ? 1 : -1;
+//     int sy = y0 < y1 ? 1 : -1;
+//     int err = dx - dy;
+
+//     while (1)
+//     {
+// 		ft_printf("now what is wrong with you x %d & y %d\n", x0, y0);
+//         my_mlx_pixel_put(img, x0, y0, color);
+//         if (x0 == x1 && y0 == y1)
+//             break;
+//         int e2 = 2 * err;
+//         if (e2 > -dy)
+//         {
+//             err -= dy;
+//             x0 += sx;
+//         }
+//         if (e2 < dx)
+//         {
+//             err += dx;
+//             y0 += sy;
+//         }
+//     }
+// }
+// void draw_isometric_grid(t_data *img, int **grid, t_map_data *map)
+// {
+//     int i;
+//     int j;
+//     int x1, y1, x2, y2;
+//     double theta;
+//     theta = 30 * M_PI / 180;
+//     int offset_x = WINDOW_WIDTH / 2;
+//     int offset_y = WINDOW_HEIGHT / 2;
+//     for (i = 0; i < map->height; i++)
+//     {
+//         for (j = 0; j < map->width; j++)
+//         {
+//             // Calculate isometric x and y values for the current point
+//             x1 = (j + i) * cos(theta);
+//             y1 = ((i - j) * sin(theta)) * -1;
+//             y1 -= grid[i][j];
+            
+//             // Add the offset to the x and y values
+//             x1 += offset_x;
+//             y1 += offset_y;
+            
+//             // Check if the point is on the right edge of the grid
+//             if (j < map->width - 1)
+//             {
+//                 x2 = (j + i + 1) * cos(theta);
+//                 y2 = ((i - j - 1) * sin(theta)) * -1;
+//                 y2 -= grid[i][j + 1];
+                
+//                 // Add the offset to the x and y values
+//                 x2 += offset_x;
+//                 y2 += offset_y;
+                
+//                 my_mlx_line(img, x1, y1, x2, y2, 0x00FFFF00, map);
+//             }
+            
+//             // Check if the point is on the bottom edge of the grid
+//             if (i < map->height - 1)
+//             {
+//                 x2 = (j + i + 1) * cos(theta);
+//                 y2 = ((i + 1 - j) * sin(theta)) * -1;
+//                 y2 -= grid[i + 1][j];
+                
+//                 // Add the offset to the x and y values
+//                 x2 += offset_x;
+//                 y2 += offset_y;
+                
+//                 my_mlx_line(img, x1, y1, x2, y2, 0x00FFFF00, map);
+//             }
+//         }
+//     }
+// } 
+
+// void draw_isometric_grid(t_data *img, int **grid, int grid_width, int grid_height)
+// {
+
+//     int i;
+//     int j;
+//     int x1, y1, x2, y2;
+//     double theta;
+//     theta = 30 * M_PI / 180;
+//     int offset_x = WINDOW_WIDTH / 2;
+//     int offset_y = WINDOW_HEIGHT / 2;
+// 	double scale_factor = 0.75;
+// 	int max_side = my_fmax(grid_width, grid_height);
+// 	int min_side = my_fmin(WINDOW_WIDTH, WINDOW_HEIGHT);
+// 	if (min_side * scale_factor < max_side)
+// 		scale_factor = min_side / max_side * 0.5;
+// 	for (i = 0; i < grid_height; i++)
+// 	{
+// 		for (j = 0; j < grid_width; j++)
+// 		{
+// 			// Calculate isometric x and y values for the current point
+// 			x1 = (j + i) * cos(theta) * scale_factor;
+// 			y1 = ((i - j) * sin(theta)) * -1 * scale_factor;
+// 			y1 -= grid[i][j] * scale_factor;
+			
+// 			// Add the offset to the x and y values
+// 			x1 += offset_x;
+// 			y1 += offset_y;
+			
+// 			// Check if the point is on the right edge of the grid
+// 			if (j < grid_width - 1)
+// 			{
+// 				x2 = (j + i + 1) * cos(theta) * scale_factor;
+// 				y2 = ((i - j - 1) * sin(theta)) * -1 * scale_factor;
+// 				y2 -= grid[i][j + 1] * scale_factor;
+				
+// 				// Add the offset to the x and y values
+// 				x2 += offset_x;
+// 				y2 += offset_y;
+				
+// 				my_mlx_line(img, x1, y1, x2, y2, 0x00FFFF00);
+// 			}
+			
+// 			// Check if the point is on the bottom edge of the grid
+// 			if (i < grid_height - 1)
+// 			{
+// 				x2 = (j + i + 1) * cos(theta) * scale_factor;
+// 				y2 = ((i + 1 - j) * sin(theta)) * -1 * scale_factor;
+// 				y2 -= grid[i + 1][j] * scale_factor;
+				
+// 				// Add the offset to the x and y values
+// 				x2 += offset_x;
+// 				y2 += offset_y;
+				
+// 				my_mlx_line(img, x1, y1, x2, y2, 0x00FFFF00);
+// 			}
+// 		}
+// 	}
+// }
+
+void draw_rotated_rect(t_data *img, t_map_data map)
+{
+    int i;
+    int j;
+    int og_y;
+    int og_x;
+    int x_rot;
+    int y_rot;
+    double theta;
+    
+    theta = 30 * M_PI / 180; // Convert degrees to radians
+    i = 0;
+    og_x = map.x;
+    og_y = map.y;
+    while(i <= map.height)
+    {
+        j = 0;
+        if (map.y == og_y || map.y == og_y + map.height)
+        {
+            while(j <= map.width)
+            {
+                x_rot = map.x * cos(theta) - map.y * sin(theta);
+                y_rot = map.x * sin(theta) + map.y * cos(theta);
+                my_mlx_pixel_put(img, x_rot, y_rot, 0x00FFFF00);
+                map.x++;
+                j++;
+            }
+            map.x = og_x;
+            map.y++;
+        }
+        else if (map.y > og_y && map.y < og_y + map.height)
+        {
+            x_rot = og_x * cos(theta) - map.y * sin(theta);
+            y_rot = og_x * sin(theta) + map.y * cos(theta);
+            my_mlx_pixel_put(img, x_rot, y_rot, 0x00FFFF00);
+            x_rot = (og_x + map.width) * cos(theta) - map.y * sin(theta);
+            y_rot = (og_x + map.width) * sin(theta) + map.y * cos(theta);
+            my_mlx_pixel_put(img, x_rot, y_rot, 0x00FFFF00);
+            map.y++;
+        }
+        i++;
+    }
+}
+
+void draw_rect(t_data *img, t_map_data map)
+{
+	int i;
+	int j;
+	int og_y;
+	int og_x;
+	
+	i = 0;
+	og_x = map.x;
+	og_y = map.y;
+	while(i <= map.height)
+	{
+		j = 0;
+		if (map.y == og_y || map.y == og_y + map.height)
+		{
+			while(j <= map.width)
+			{
+				my_mlx_pixel_put(img, map.x, map.y, 0x00FFFF00);
+				map.x++;
+				j++;
+			}
+		map.x = og_x;
+		map.y++;
+		}
+		else if (map.y > og_y && map.y < og_y + map.height)
+		{
+			my_mlx_pixel_put(img, og_x, map.y, 0x00FFFF00);
+			my_mlx_pixel_put(img, og_x + map.width, map.y, 0x00FFFF00);
+			map.y++;
+		}
+		i++;
+	}
+}
+void draw_triangle(t_data *img, t_map_data map)
+{
+	int i;
+	int j;
+	int k;
+	int og_y;
+	int og_x;
+	
+	i = 0;
+	j = 0;
+	k = 0;
+	og_x = map.x;
+	og_y = map.y;
+	while (i <= map.height)
+	{
+		if (map.y == og_y)
+		{
+			my_mlx_pixel_put(img, map.x, map.y, 0x00FFFF00);
+			map.y++;
+		}
+		else if (map.y != og_y + map.height)
+		{
+			my_mlx_pixel_put(img, map.x + j, map.y, 0x00FFFF00);
+			my_mlx_pixel_put(img, map.x + k, map.y, 0x00FFFF00);
+			j++;
+			k--;
+			map.y++;
+		}
+		if (map.y == og_y + map.height)
+		{
+			while(k < 0)
+			{
+				my_mlx_pixel_put(img, map.x + k, map.y, 0x00FFFF00);
+				k++;
+			}
+			while(j > 0)
+			{
+				my_mlx_pixel_put(img, map.x + j, map.y, 0x00FFFF00);
+				j--;
+			}
+			my_mlx_pixel_put(img, map.x, map.y, 0x00FFFF00);
+		}
+		i++;
+	}
+}
+
+void	draw_ang_rect(t_data *img, t_map_data map)
+{
+	int i;
+	int j;
+	int k;
+	int og_y;
+	int og_x;
+	
+	i = 0;
+	j = 0;
+	k = 0;
+	og_x = map.x;
+	og_y = map.y;
+	while (i <= map.height)
+	{
+		ft_printf("map y is %d and og_y / 2 is %d\n\n", map.y, og_y + (map.height / 2));
+		if (map.y == og_y || map.y == og_y + map.height)
+		{
+			my_mlx_pixel_put(img, map.x, map.y, 0x00FFFF00);
+			map.y++;
+		}
+		else if (map.y < og_y + (map.height / 2))
+		{
+			my_mlx_pixel_put(img, map.x + j, map.y, 0x00FFFF00);
+			my_mlx_pixel_put(img, map.x + k, map.y, 0x00FFFF00);
+			j++;
+			k--;
+			map.y++;
+		}
+		else if (map.y >= og_y + (map.height / 2))
+		{
+			my_mlx_pixel_put(img, map.x + j, map.y, 0x00FFFF00);
+			my_mlx_pixel_put(img, map.x + k, map.y, 0x00FFFF00);
+			j--;
+			k++;
+			map.y++;
+		}
+		i++;
+	}
+}
+
+
+working
+
+void	draw_grid(t_data *img, t_map_data *map, t_counter *count)
+{
+    int og_y;
+    int og_x;
+	int round;
+    double theta;
+	int	isometric_x;
+	int isometric_y;
+    // //30 degrees to radians
+    theta = -30 * M_PI / 180;
+    og_x = map->x;
+    og_y = map->y;
+	round = 0;
+	//my_mlx_pixel_put(img, map->x, map->y, WHITE);
+	//count_theta(map->map[count->i][count->j], theta)
+	while(map->map[count->i])
+	{
+		count->j = 0;
+		if (count->i == 0)
+		{
+			ft_printf("we get here 2\n");
+			map->y = og_y + map->line_len;
+			while(count->k < map->line_len * map->height)
+			{
+				isometric_x = (map->x + map->y) * cos(theta);
+                isometric_y = ((map->y - map->x) * sin(theta));
+				if(isometric_x > 0 && isometric_y > 0)
+					my_mlx_pixel_put(img, isometric_x, isometric_y, WHITE);
+			// ft_printf("iso x %d and iso y %d sideline\n",isometric_x, isometric_y);
+				//my_mlx_pixel_put(img, map->x, map->y, WHITE);
+				map->y++;
+				count->k++;
+			}
+			count->k = 0;
+		}
+		while (count->j < map->width && count->i != map->height)
+		{
+			while(count->k < map->line_len)
+			{
+				map->y = og_y + map->line_len;
+				isometric_x = (map->x + map->y) * cos(theta);
+                isometric_y = ((map->y - map->x) * sin(theta) );
+				ft_printf("round for x %d\n",round);
+				if(isometric_x > 0 && isometric_y > 0)
+					my_mlx_pixel_put(img, isometric_x, isometric_y, WHITE);
+					// ft_printf("iso x %d and iso y %d\n",isometric_x, isometric_y);
+				//my_mlx_pixel_put(img, map->x, map->y, WHITE);
+				map->x++;
+				count->k++;
+				if (count->k == map->line_len)
+				{
+					while (count->k > 0)
+					{
+						ft_printf("round for y %d\n",round);
+						isometric_x = (map->x + map->y) * cos(theta);
+                		isometric_y = ((map->y - map->x) * sin(theta));
+						if(isometric_x > 0 && isometric_y > 0)
+							my_mlx_pixel_put(img, isometric_x, isometric_y, WHITE);
+							// ft_printf("iso x %d and iso y %d elsewhere\n",isometric_x, isometric_y);
+						//my_mlx_pixel_put(img, map->x-map->line_len, map->y, WHITE);
+						map->y++;
+						count->k--;
+					}
+					count->k = map->line_len;
+					round++;
+				}
+			}
+			count->k = 0;
+			count->j++;
+		}
+		if (count->j == map->width )
+		{
+			ft_printf("we get here 2\n");
+			map->y = og_y + map->line_len;
+			while(count->k < map->line_len)
+			{
+				isometric_x = (map->x + map->y) * cos(theta);
+                isometric_y = ((map->y - map->x) * sin(theta));
+				if(isometric_x > 0 && isometric_y > 0)
+					my_mlx_pixel_put(img, isometric_x, isometric_y, WHITE);
+			// ft_printf("iso x %d and iso y %d sideline\n",isometric_x, isometric_y);
+				//my_mlx_pixel_put(img, map->x, map->y, WHITE);
+				map->y++;
+				count->k++;
+			}
+			count->k = 0;
+		}
+		else if (count->i == map->height)
+		{
+			ft_printf("we get here 3\n");
+			while(count->j < map->width )
+			{
+				while(count->k < map->line_len)
+				{
+					isometric_x = (map->x + map->y) * cos(theta);
+					isometric_y = ((map->y - map->x) * sin(theta));
+					if(isometric_x > 0 && isometric_y > 0)
+						my_mlx_pixel_put(img, isometric_x, isometric_y, WHITE);
+						//ft_printf("iso x %d and iso y %d in bottom\n",isometric_x, isometric_y);
+					//my_mlx_pixel_put(img, map->x, map->y, WHITE);
+					map->x++;
+					count->k++;
+				}
+				if(isometric_x > 0 && isometric_y > 0)
+					my_mlx_pixel_put(img, isometric_x, isometric_y, WHITE);
+				count->k = 0;
+				count->j++;
+			}
+			count->k = 0;
+			break;
+		}
+		og_y = og_y + map->line_len;
+		count->i++;
+		map->x = og_x;
+	}
+}
+
+
+
+void draw_isometric_rect(t_data *img, t_map_data map)
+{
+    int i;
+    int j;
+    int og_y;
+    int og_x;
+    int x_isom;
+    int y_isom;
+    double theta;
+    //30 degrees to radians
+    theta = -30 * M_PI / 180;
+    i = 0;
+    og_x = map.x;
+    og_y = map.y;
+    while(i <= map.height)
+    {
+        j = 0;
+        if (map.y == og_y || map.y == og_y + map.height)
+        {
+            while(j <= map.width)
+            {
+				ft_printf("so we get here twice eh? %d\n", i);
+                x_isom = (map.x + map.y) * cos(theta);
+                y_isom = ((map.y - map.x) * sin(theta)) * -1;
+				ft_printf("isom x = %d, isom y = %d\n", x_isom, y_isom);
+                my_mlx_pixel_put(img, x_isom, y_isom, 0x00FFFF00);
+                map.x++;
+                j++;
+            }
+            map.x = og_x;
+            map.y++;
+        }
+        else if (map.y > og_y && map.y < og_y + map.height)
+        {
+            x_isom = (og_x + map.y) * cos(theta);
+            y_isom = (map.y - og_x) * sin(theta);
+            my_mlx_pixel_put(img, x_isom, y_isom, 0x00FFFF00);
+            x_isom = (og_x + map.width + map.y) * cos(theta);
+            y_isom = ((map.y - og_x - map.width) * sin(theta)) * -1;
+            my_mlx_pixel_put(img, x_isom, y_isom, 0x00FFFF00);
+            map.y++;
+        }
+        i++;
+    }
+}
+
+
+	// ft_printf("what is x =%d\nwhat is y = %d\n", map.x, map.y);
+	//draw_isometric_grid(&img, map, grid);
+	// draw_isometric_grid(&img, grid, &map);
+	//draw_isometric_rect(&img, map);
+	// draw_rect(&img, map);
+	// draw_triangle(&img, map);
+	/*while (i < 1980)
+	{
+		my_mlx_pixel_put(&img, i, WINDOW_HEIGHT / 2, 0x00FF00);
+		i++;
+	}
+	i = 0;
+	while (i < 1080)
+	{
+		my_mlx_pixel_put(&img, WINDOW_WIDTH / 2, i, 0x00FF00);
+		i++;
+	}*/
+	// i = 0;
+	/*while(i < 2)
+	{
+		draw_ang_rect(&img, map);
+		map.x = WINDOW_WIDTH / 2.5;
+		map.y = WINDOW_HEIGHT / 2.5;
+		i++;
+	}*/
+	//my_mlx_pixel_put(&img, map.x, map.y, 0x00FFFF00);
+	//my_mlx_pixel_put(&img, map.x, map.y, 0x00FFFF00);
+
+
+	end_y = start_y + map->line_len/(angle + (map->map[x][y + 1] * z_scale));
+
+
+
+double count_theta(int coord)
+{
+	double	theta;
+	theta = coord * M_PI / 180;
+	return (theta);
+}
+
+void	draw_grid(t_data *img, t_map_data *map, t_counter *count)
+{
+    int og_y;
+    int og_x;
+	int round;
+    double theta;
+	int	isometric_x;
+	int isometric_y;
+    // //30 degrees to radians
+    theta = -30 * M_PI / 180;
+    og_x = map->x;
+    og_y = map->y;
+	round = 0;
+	//my_mlx_pixel_put(img, map->x, map->y, WHITE);
+	//count_theta(map->map[count->i][count->j], theta)
+	while(map->map[count->i])
+	{
+		count->j = 0;
+		if (count->i == 0)
+		{
+			ft_printf("we get here 2\n");
+			map->y = og_y + map->line_len;
+			while(count->k < map->line_len * map->height)
+			{
+				isometric_x = (map->x + map->y) * cos(theta);
+                isometric_y = ((map->y - map->x) * sin(theta));
+				if((isometric_x > 0 && isometric_y > 0) || (isometric_x < WINDOW_WIDTH && isometric_y < WINDOW_HEIGHT))
+					my_mlx_pixel_put(img, isometric_x, isometric_y, WHITE);
+			// ft_printf("iso x %d and iso y %d sideline\n",isometric_x, isometric_y);
+				//my_mlx_pixel_put(img, map->x, map->y, WHITE);
+				map->y++;
+				count->k++;
+			}
+			count->k = 0;
+		}
+		while (count->j < map->width && count->i != map->height)
+		{
+			while(count->k < map->line_len)
+			{
+				map->y = og_y + map->line_len;
+				isometric_x = (map->x + map->y) * cos(theta);
+                isometric_y = ((map->y - map->x) * sin(theta));
+				ft_printf("round for x %d\n",round);
+				if((isometric_x > 0 && isometric_y > 0) || (isometric_x < WINDOW_WIDTH && isometric_y < WINDOW_HEIGHT))
+					my_mlx_pixel_put(img, isometric_x, isometric_y, WHITE);
+					// ft_printf("iso x %d and iso y %d\n",isometric_x, isometric_y);
+				//my_mlx_pixel_put(img, map->x, map->y, WHITE);
+				map->x++;
+				count->k++;
+				if (count->k == map->line_len)
+				{
+					while (count->k > 0)
+					{
+						ft_printf("round for y %d\n",round);
+						isometric_x = (map->x + map->y) * cos(theta);
+                		isometric_y = ((map->y - map->x) * sin(theta));
+						if((isometric_x > 0 && isometric_y > 0) || (isometric_x < WINDOW_WIDTH && isometric_y < WINDOW_HEIGHT))
+							my_mlx_pixel_put(img, isometric_x, isometric_y, WHITE);
+							// ft_printf("iso x %d and iso y %d elsewhere\n",isometric_x, isometric_y);
+						//my_mlx_pixel_put(img, map->x-map->line_len, map->y, WHITE);
+						map->y++;
+						count->k--;
+					}
+					count->k = map->line_len;
+					round++;
+				}
+			}
+			count->k = 0;
+			count->j++;
+		}
+		if (count->j == map->width )
+		{
+			ft_printf("we get here 2\n");
+			map->y = og_y + map->line_len;
+			while(count->k < map->line_len)
+			{
+				isometric_x = (map->x + map->y) * cos(theta);
+                isometric_y = ((map->y - map->x) * sin(theta));
+				if((isometric_x > 0 && isometric_y > 0) || (isometric_x < WINDOW_WIDTH && isometric_y < WINDOW_HEIGHT))
+					my_mlx_pixel_put(img, isometric_x, isometric_y, WHITE);
+			// ft_printf("iso x %d and iso y %d sideline\n",isometric_x, isometric_y);
+				//my_mlx_pixel_put(img, map->x, map->y, WHITE);
+				map->y++;
+				count->k++;
+			}
+			count->k = 0;
+		}
+		else if (count->i == map->height)
+		{
+			ft_printf("we get here 3\n");
+			while(count->j < map->width )
+			{
+				while(count->k < map->line_len)
+				{
+					isometric_x = (map->x + map->y) * cos(theta);
+					isometric_y = ((map->y - map->x) * sin(theta));
+					if((isometric_x > 0 && isometric_y > 0) || (isometric_x < WINDOW_WIDTH && isometric_y < WINDOW_HEIGHT))
+						my_mlx_pixel_put(img, isometric_x, isometric_y, WHITE);
+						//ft_printf("iso x %d and iso y %d in bottom\n",isometric_x, isometric_y);
+					//my_mlx_pixel_put(img, map->x, map->y, WHITE);
+					map->x++;
+					count->k++;
+				}
+				if((isometric_x > 0 && isometric_y > 0) || (isometric_x < WINDOW_WIDTH && isometric_y < WINDOW_HEIGHT))
+					my_mlx_pixel_put(img, isometric_x, isometric_y, WHITE);
+				count->k = 0;
+				count->j++;
+			}
+			count->k = 0;
+			break;
+		}
+		og_y = og_y + map->line_len;
+		count->i++;
+		map->x = og_x;
+	}
+}
+
+
+void	draw_isom_grid(t_data *img, t_map_data *map, t_counter *count)
+{
+	int og_y;
+	int og_x;
+	double theta;
+	int	iso_x;
+	int iso_y;
+	int iso_y_next;
+	int iso_x_next;
+	float	z_scale;
+
+    // //30 degrees to radians
+    theta = -30 * M_PI / 180;
+	printf("theta is %f\n", theta);
+	og_x = map->x;
+	og_y = map->y;
+	z_scale = 0.2;
+	while(map->map[count->i])
+	{
+		count->j = 0;
+		if (count->i == 0)
+		{
+			//count_theta(map->map[count->i][count->j]);
+			map->y = og_y + map->line_len;
+			while(count->l < map->height)
+			{
+				iso_x = (map->x + map->y) * cos(theta);
+				iso_y = ((map->y - map->x) * sin(theta)) - (map->map[count->i][count->j] * map->line_len);
+				while(count->k < map->line_len)
+				{
+					map->y++;
+					count->k++;
+				}
+				iso_x_next = (map->x + map->y) * cos(theta);
+				iso_y_next = ((map->y - map->x) * sin(theta)) - (map->map[count->i][count->j] * map->line_len);
+				draw_line(img, iso_x, iso_y, iso_x_next, iso_y_next, WHITE);
+				count->k = 0;
+				count->l++;
+			}
+		}
+		while (count->j < map->width && count->i != map->height)
+		{
+			map->y = og_y + map->line_len;
+			iso_x = (map->x + map->y) * cos(theta);
+            iso_y = ((map->y - map->x) * sin(theta) );
+			while(count->k < map->line_len)
+			{
+				map->x++;
+				count->k++;
+			}
+			iso_x_next = (map->x + map->y) * cos(theta);
+			iso_y_next = ((map->y - map->x) * sin(theta));
+			draw_line(img, iso_x, iso_y, iso_x_next, iso_y_next, WHITE);
+			while (count->k > 0)
+			{
+				map->y++;
+				count->k--;
+			}
+			iso_x_next = (map->x + map->y) * cos(theta);
+			iso_y_next = ((map->y - map->x) * sin(theta));
+			map->y = og_y + map->line_len;
+			iso_x = (map->x + map->y) * cos(theta);
+            iso_y = ((map->y - map->x) * sin(theta) );
+			draw_line(img, iso_x, iso_y, iso_x_next, iso_y_next, WHITE);
+			count->k = 0;
+			count->j++;
+		}
+		
+		count->k = 0;
+		if (count->j == map->width )
+		{
+			map->y = og_y + map->line_len;
+			iso_x = (map->x + map->y) * cos(theta);
+            iso_y = ((map->y - map->x) * sin(theta));
+			while(count->k < map->line_len )
+			{
+				map->y++;
+				count->k++;
+			}
+			iso_x_next = (map->x + map->y) * cos(theta);
+            iso_y_next = ((map->y - map->x) * sin(theta));
+			draw_line(img, iso_x, iso_y, iso_x_next, iso_y_next, WHITE);
+			count->k = 0;
+		}
+		// this  next this will draw the top x line!
+		else if (count->i == map->height)
+		{
+			while(count->j < map->width)
+			{
+				iso_x = (map->x + map->y) * cos(theta);
+				iso_y = ((map->y - map->x) * sin(theta));
+				while(count->k < map->line_len)
+				{
+					map->x++;
+					count->k++;
+				}
+				iso_x_next = (map->x + map->y) * cos(theta);
+            	iso_y_next = ((map->y - map->x) * sin(theta));
+				draw_line(img, iso_x, iso_y, iso_x_next, iso_y_next, WHITE);
+				count->k = 0;
+				count->j++;
+			}
+			count->k = 0;
+			break;
+		}
+		og_y = og_y + map->line_len;
+		count->i++;
+		map->x = og_x;
+	}
+}
+void	draw_isom_grid_v2(t_data *img, t_map_data *map, t_counter *count)
+{
+	int	x;
+	int y;
+	int og_y;
+	int og_x;
+	int	iso_x;
+	int iso_y;
+	int iso_y_next;
+	int iso_x_next;
+	double theta;
+    
+	theta = -30 * M_PI / 180;
+	x = 0;
+	y = 0;
+	og_x = map->x;
+	og_y = map->y;
+	while(map->map[y])
+	{
+		if (x == map->width - 1 && y != map->height)
+		{
+			iso_x = (map->x + map->y) * cos(theta);
+            iso_y = ((map->y - map->x) * sin(theta));
+			map->y += map->line_len;
+			iso_x_next = (map->x + map->y) * cos(theta);
+			iso_y_next = ((map->y - map->x) * sin(theta));
+			draw_line(img, iso_x, iso_y, iso_x_next, iso_y_next, RED);
+			count->i = 0;
+			y++;
+			x = 0;
+			map->x = og_x;
+		}
+		else if (y == map->height - 1)
+		{
+			ft_printf("we ever here\n");
+			iso_x = (map->x + map->y) * cos(theta);
+            iso_y = ((map->y - map->x) * sin(theta));
+			map->x += map->line_len;
+			iso_x_next = (map->x + map->y) * cos(theta);
+			iso_y_next = ((map->y - map->x) * sin(theta));
+			draw_line(img, iso_x, iso_y, iso_x_next, iso_y_next, GREEN);
+			x++;
+			if(x == map->width - 1)
+				break;
+		}
+		else
+		{
+			iso_x = (map->x + map->y) * cos(theta);
+            iso_y = ((map->y - map->x) * sin(theta));
+			map->y += map->line_len;
+			iso_x_next = (map->x + map->y) * cos(theta);
+			iso_y_next = ((map->y - map->x) * (sin(theta)));
+			draw_line(img, iso_x, iso_y, iso_x_next, iso_y_next, WHITE);
+			map->y -= map->line_len;
+			iso_x = (map->x + map->y) * cos(theta);
+            iso_y = ((map->y - map->x) * sin(theta));
+			map->x += map->line_len;
+			iso_x_next = (map->x + map->y) * cos(theta);
+			iso_y_next = ((map->y - map->x) * sin(theta));
+			draw_line(img, iso_x, iso_y, iso_x_next, iso_y_next, WHITE);
+			x++;
+		}
+		//map->y = og_y + map->line_len;
+		//map->x = og_x + map->line_len;
+
+		if(map->map[y] == NULL)
+			break;
+	}
+}
+float z(int z)
+{
+	z = z * 0.1;
+	return (z);
+}
+
+void	draw_isom_grid_v3(t_data *img, t_map_data *map, t_counter *count)
+{
+	int	x;
+	int y;
+	int og_y;
+	int og_x;
+	int	iso_x;
+	int iso_y;
+	int iso_y_next;
+	int iso_x_next;
+	double theta;
+	//int color;
+	float z_scale;
+	int test;
+    
+	theta = -30 * M_PI / 180;
+	x = 0;
+	y = 0;
+	og_x = map->x;
+	og_y = map->y;
+	z_scale = 1;
+	test = 	iso_x = (map->x + map->y) * cos(theta + count_theta(map->map[y][x]));
+
+	while(map->map[y])
+	{
+		if (x == map->width - 1 && y != map->height)
+		{
+			iso_x = (map->x + map->y) * cos(theta);
+            iso_y = ((map->y - map->x) * sin(theta));
+			map->y += map->line_len;
+			iso_x_next = (map->x + map->y) * cos(theta);
+			iso_y_next = ((map->y - map->x) * sin(theta));
+			draw_line(img, iso_x, iso_y, iso_x_next, iso_y_next, RED);
+			count->i = 0;
+			y++;
+			x = 0;
+			map->x = og_x;
+		}
+		else if (y == map->height - 1)
+		{
+			iso_x = (map->x + map->y) * cos(theta);
+            iso_y = ((map->y - map->x) * sin(theta));
+			map->x += map->line_len;
+			iso_x_next = (map->x + map->y) * cos(theta);
+			iso_y_next = ((map->y - map->x) * sin(theta));
+			draw_line(img, iso_x, iso_y, iso_x_next, iso_y_next, GREEN);
+			x++;
+			if(x == map->width - 1)
+				break;
+		}
+		else
+		{
+			iso_x = (map->x + map->y) * cos(theta + count_theta(z(map->map[y][x])));
+            iso_y = ((map->y - map->x) * sin(theta));
+			map->y += map->line_len;
+			iso_x_next = (map->x + map->y) * cos(theta + count_theta(z(map->map[y + 1][x])));
+			iso_y_next = ((map->y - map->x )) * (sin(theta));
+			ft_printf("now what is going on %d %d & %d %d\n", iso_x, iso_y, iso_x_next, iso_y_next);
+			draw_line(img, iso_x, iso_y, iso_x_next, iso_y_next, WHITE);
+			map->y -= map->line_len;
+			iso_x =  (map->x + map->y) * cos(theta + count_theta(z(map->map[y][x])));
+            iso_y = ((map->y - map->x) * sin(theta));
+			map->x += map->line_len;
+			iso_x_next = (map->x + map->y) * cos(theta + count_theta(z(map->map[y][x + 1])));
+			iso_y_next = ((map->y - map->x) * sin(theta));
+			draw_line(img, iso_x, iso_y, iso_x_next, iso_y_next, YELLOWISH);
+			x++;
+		}
+		if(map->map[y] == NULL)
+			break;
+	}
+}
+/*void	draw_x(t_data *img, t_map_data *map, t_counter *count)
+{
+	int x;
+	int y;
+
+	x = 0;
+	y = 0;
+	while (map->map[y])
+	{
+		return ;
+	}
+}
+
+void	draw_y(t_data *img, t_map_data *map, t_counter *count)
+{
+	return ;
+}
+
+void	draw_isom_grid_v4(t_data *img, t_map_data *map, t_counter *count)
+{
+	// this time draw the grid x first then y also draw the lines from top to bottom
+	// first go through the first x lines then hop to y1 and draw x again until y == height -1 x:s should be done
+	// now reset the y and the x to go to the beggining and start to draw the y line so that first all y lines in x0
+	// and the x1 and so forth now you should have all the lines 
+	// this all should be done so that the z axis is also taken into account 
+	// X and Y should be splitten into functions 
+	// should I also look at colors and if so how?
+	draw_x(img, map, count);
+	draw_y (img, map, count);
+}*/
+void draw_isom_grid_v5(t_data *img, t_map_data *map, t_counter *count)
+{
+    int x;
+    int y;
+    int og_y;
+    int og_x;
+    int iso_x;
+    int iso_y;
+    int iso_y_next;
+    int iso_x_next;
+    double theta;
+    float z_scale;
+    
+    theta = -30 * M_PI / 180;
+    x = 0;
+    y = map->height - 1; // set initial y position to last row
+    og_x = map->x;
+    og_y = map->y;
+    z_scale = 1;
+    iso_x = (map->x + map->y) * cos(theta + count_theta(map->map[y][x]));
+
+    while (y >= 0) // loop through rows in reverse order
+	{
+        if (x == map->width - 1 && y != 0)
+		{
+            iso_x = (map->x + map->y) * cos(theta);
+            iso_y = ((map->y - map->x) * sin(theta));
+            map->y -= map->line_len; // decrement y to go down a row
+            iso_x_next = (map->x + map->y) * cos(theta);
+            iso_y_next = ((map->y - map->x) * sin(theta));
+            draw_line(img, iso_x, iso_y, iso_x_next, iso_y_next, RED);
+            count->i = 0;
+            y--;
+            x = 0;
+            map->x = og_x;
+        }
+		else if (y == 0) {
+            iso_x = (map->x + map->y) * cos(theta);
+            iso_y = ((map->y - map->x) * sin(theta));
+            map->x += map->line_len; // increment x to go to the next column
+            iso_x_next = (map->x + map->y) * cos(theta);
+            iso_y_next = ((map->y - map->x) * sin(theta));
+            draw_line(img, iso_x, iso_y, iso_x_next, iso_y_next, GREEN);
+            x++;
+            if (x == map->width - 1)
+                break;
+        }
+		else 
+		{
+            iso_x = (map->x + map->y) * cos(theta + count_theta(z(map->map[y][x])));
+            iso_y = ((map->y - map->x) * sin(theta));
+            map->y -= map->line_len; // decrement y to go down a row
+            iso_x_next = (map->x + map->y) * cos(theta + count_theta(z(map->map[y - 1][x])));
+            iso_y_next = ((map->y - map->x )) * (sin(theta));
+			ft_printf("1. now what is going on %d %d & %d %d\n", iso_x, iso_y, iso_x_next, iso_y_next);
+            draw_line(img, iso_x, iso_y, iso_x_next, iso_y_next, WHITE);
+            map->y += map->line_len; // increment y back to the current row
+            iso_x =  (map->x + map->y) * cos(theta + count_theta(z(map->map[y][x])));
+            iso_y = ((map->y - map->x) * sin(theta));
+            map->x += map->line_len; // increment x to go to the next column
+            iso_x_next = (map->x + map->y) * cos(theta + count_theta(z(map->map[y][x + 1])));
+            iso_y_next = ((map->y - map->x) * sin(theta));
+            draw_line(img, iso_x, iso_y, iso_x_next, iso_y_next, YELLOWISH);
+			x++;
+		}
+	}
+}
+
+
+void draw_isom_grid_v6(t_data *img, t_map_data *map, t_counter *count)
+{
+    double theta = -30 * M_PI / 180;
+    float z_scale = 0.1;
+    int x = 0;
+    int y = map->height - 1;
+    int og_x = 0;
+    int og_y = (map->height - 1) * map->line_len;
+    int iso_x;
+	int iso_y;
+	count -> i  = 0;
+	int iso_x_next;
+	int iso_y_next;
+	int color;
+	//img->line_length = 1;
+    while (y >= 0)
+    {
+        x = 0;
+        while (x < map->width)
+        {
+            iso_x = (og_x + og_y) * cos(theta + count_theta(z(map->map[y][x])));
+            iso_y = (og_y - og_x) * sin(theta + count_theta(z(map->map[y][x]))) - z(map->map[y][x]) * z_scale;
+            
+            if (x + 1 < map->width)
+            {
+                iso_x_next = (og_x + og_y) * cos(theta + count_theta(z(map->map[y][x + 1])));
+                iso_y_next = (og_y - og_x - map->line_len) * sin(theta + count_theta(z(map->map[y][x + 1]))) - z(map->map[y][x + 1]) * z_scale;
+                color = z(map->map[y][x]) >= 0 ? RED : WHITE;
+				ft_printf("1. now what is going on %d %d & %d %d\n", my_abs(iso_x), my_abs(iso_y), my_abs(iso_x_next), my_abs(iso_y_next));
+				draw_line(img, my_abs(iso_x), my_abs(iso_y), my_abs(iso_x_next), my_abs(iso_y_next), color);
+            }
+            if (y - 1 >= 0)
+            {
+                iso_x_next = (og_x + og_y - map->line_len) * cos(theta + count_theta(z(map->map[y - 1][x])));
+                iso_y_next = (og_y - og_x) * sin(theta + count_theta(z(map->map[y - 1][x]))) - z(map->map[y - 1][x]) * z_scale;
+                color = z(map->map[y][x]) >= 0 ? YELLOWISH : WHITE;
+				ft_printf("2. now what is going on %d %d & %d %d\n", my_abs(iso_x), my_abs(iso_y), my_abs(iso_x_next), my_abs(iso_y_next));
+				draw_line(img, my_abs(iso_x), my_abs(iso_y), my_abs(iso_x_next), my_abs(iso_y_next), color);
+            }
+            x++;
+            og_x += map->line_len;
+        }
+        y--;
+        og_x = 0;
+        og_y -= map->line_len;
+    }
+}
+
+void draw_y(t_data *img, t_map_data *map, t_coordinates *coords)
+{
+	int	x;
+	int	y;
+
+	y = 0;
+	x = 0;
+	ft_printf("hello map [2][2] = %d == 10\n", map->map[2][2]);
+	init_coords_y(coords, map);
+	while(x < map->width - 2)
+	{
+		while(y < map->height - 2)
+		{
+			// write(1, "here at beg\n", 11);
+			//ft_printf("what is it now y = %d x = %d end_x %d end_y %d\n\n",coords->start_x, coords->start_y, coords->end_x, coords->end_y);
+			draw_line(img, coords->start_x, coords->start_y, coords->end_x, coords->end_y, RED);
+			y++;
+			coords->start_x = coords->end_x;
+			coords->start_y = coords->end_y;
+			coords->end_x = coords->start_x - map->line_len;
+			ft_printf("hello y %d & x %d \n", y, x);
+			coords->end_y = (coords->start_y + map->line_len) - count_difference_y(map, y, x) ;
+		}
+		x++;
+		coords->start_x = WINDOW_WIDTH / 2 + (map->line_len * x);
+		coords->start_y = (WINDOW_HEIGHT / 2 - (map->height * map->line_len)) + (map->line_len / coords->angle)* x;
+		coords->end_x = coords->start_x - map->line_len; 
+		coords->end_y = (coords->start_y + map->line_len) - count_difference_y(map, y, x) ;
+		y = 0;
+	}
+}
+
+
+void init_coords_y(t_coordinates *coords, t_map_data *map)
+{
+	coords->angle = 2;
+	coords->z_scale = 0.1;
+	coords->start_x = WINDOW_WIDTH / 2 ;
+	coords->start_y = WINDOW_HEIGHT / 2 - (map->height * map->line_len);
+	coords->end_x = coords->start_x - map->line_len; 
+	coords->end_y = (coords->start_y + map->line_len) - count_difference_y(map, 1, 1);
+}
